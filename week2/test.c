@@ -10,6 +10,8 @@ int main(void)
 
 	increas();
 	printf("x1 = %d  x2 = %d\n",x1,x2);
+	printf("========================\n");
+	printf("%d\n",'c' == 99);
 	return 0;
 }
 

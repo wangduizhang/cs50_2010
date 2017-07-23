@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #define FILEPATHs "/Users/wp/Desktop/studentinformation.txt"
 #define FILEPATHa "/Users/wp/Desktop/address.txt"
@@ -59,11 +60,14 @@ int main()
         fscanf(text2,"%s",studentaddress[i].id);
         fscanf(text2,"%s",studentaddress[i].address);
     }
-    
-    printf(">>>");
+    printf("===============================\n");
+    printf("         学生信息查询系统        \n");
+    printf("===============================\n");
+    printf("输入你要查询的学生姓名\n");
+    printf(">>>\n");
     
     scanf("%50s",selfname);
-    
+
     
     for (int i = 1; i <= NUMBEROFSTUDENT; ++i){                                                                                                                                       
         if (strcmp(students[i].name, selfname) == 0){

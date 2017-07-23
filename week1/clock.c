@@ -85,6 +85,7 @@ struct time updatetimedrop(struct time gettime)
 char choice_(void)
 {
     char choi;
+    char chch[100];
     bool r;
 
 
@@ -113,8 +114,11 @@ char choice_(void)
     	   		break;
     		default:
     	   		r = true;
-    	if (r == true)
+    	if (r == true){
     	    printf("错误的指令！\n");
+            fgets(chch,99,stdin);
+        }
+
         }
     }while(r);
 
