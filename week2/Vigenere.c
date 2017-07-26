@@ -2,10 +2,11 @@
 #include <ctype.h>
 
 #define TEST 0
-#define CLEAN_STDIN fgets(chch,99,stdin);
-static int long_test = 0;//要转换的字符数
-static int long_str = 0;
+#define CLEAN_STDIN fgets(clean,99,stdin);
 static int long_key = 0;
+static char clean[100];
+static int long_test = 0;
+static int long_str = 0;
 
 
 
@@ -17,7 +18,7 @@ int encrypt(char *ciphertext,char *key)
     
     while(n < long_test){
    	    char word = *ciphertext;
-   	    n++;
+
         if (index == long_key){
              index = 0;
              key = key - long_key;
@@ -30,6 +31,7 @@ int encrypt(char *ciphertext,char *key)
         		*ciphertext = *ciphertext + *key - 65;
         	key++;
         	index++;
+            n++;
         }
         ciphertext++; 	
    }
@@ -95,17 +97,19 @@ int gettest(char *ciphertext)
 {
     int word = 1;
 
+
     while(long_str < 10000)
     {
         word = getchar();
         *ciphertext = word;
         if (word == '\n' && *(ciphertext-1) == '\n')
             break;
+        
         if (('a'<=word && word<= 'z')||('A'<=word && word<='Z'))
             long_test++;
+
         ciphertext++;
         long_str++;
-
     }
    return 0;
 }
@@ -148,7 +152,6 @@ int main(void)
 
 
     int choice;
-    char chch[100];
     char key[100];
     char ciphertext[10000];
 
@@ -158,19 +161,19 @@ int main(void)
     printf("           1.加密 2.解密\n");
     printf("====================================\n");
     printf(">>>你的选择:");
-	while(!scanf("%d",&choice) && (choice != 1 || choice != 2))
-	{
+    while(1)
+    {   
+        scanf("%d",&choice);
+        if(choice == 1 || choice == 2)
+            break;
         CLEAN_STDIN;
         printf(">>>你的选择:");
-	}
+    }
 
     switch(choice){
         case 1:
             printf(">>>输入你要加密的文本:\n");
-            //清空缓冲区
-            CLEAN_STDIN;
             gettest(ciphertext);
-            CLEAN_STDIN;
             printf(">>>输入你的密钥：\n");
             getkey(key);
             upstr(ciphertext,key);
@@ -193,7 +196,7 @@ int main(void)
             printf("====================================\n");
             printf("                 密文\n");
             printf("====================================\n");
-            for (int i = 0; i <= long_test; ++i)
+            for (int i = 0; i <= long_str; ++i)
                 putchar(ciphertext[i]);
             printf("\n");
 
@@ -209,10 +212,7 @@ int main(void)
         //解密
         case 2:
             printf(">>>输入你要解密的文本:\n");
-            //清空缓冲区
-            CLEAN_STDIN;
             gettest(ciphertext);
-            CLEAN_STDIN;
             printf(">>>输入你的密钥：\n");
             getkey(key);
             upstr(ciphertext,key);
@@ -220,7 +220,7 @@ int main(void)
             printf("====================================\n");
             printf("                 明文\n");
             printf("====================================\n");
-            for (int i = 0; i <= long_test; ++i)
+            for (int i = 0; i <= long_str; ++i)
                 putchar(ciphertext[i]);
             printf("\n");
             break;
