@@ -12,18 +12,10 @@ int enrot(char *p,int n)
     if (n > 26)
     	n = n % 26;
 	for (int i = 0; i <= long_str; ++i)
-	{
-		if ('a'<=p[i] && p[i]<= 'z'){
-			p[i] = p[i] + n;
-			if (p[i] > 'z')
-				p[i] = 'a' + p[i] - 'z' -1;
-		}
-		else if ('A'<=p[i] && p[i]<='Z'){
-			p[i] = p[i] + n;
-		    if(p[i] > 'Z')
-				p[i] = 'A' + p[i] - 'Z' - 1;
-		}
-	}
+		if ('a'<=p[i] && p[i]<= 'z')
+			p[i] = (p[i] + n > 'z' || p[i] + n < 'a')?  p[i] - 'z' + 'a'  +n - 1: p[i] + n;
+		else if ('A'<=p[i] && p[i]<='Z')
+			p[i] = (p[i] + n > 'Z' || p[i] + n < 'A')? p[i] - 'Z' - 1 + 'A' + n : p[i] + n;
 	printf("====================================\n");
     printf("                 密文\n");
     printf("====================================\n");
@@ -40,18 +32,10 @@ int unrot(char *p,int n)
     	n = n % 26;
     printf("%d\n",n);
     for (int i = 0; i <= long_str; ++i)
-	{
-		if ('a'<=p[i] && p[i]<= 'z'){
-			p[i] = p[i] - n;
-			if (p[i] < 'a')
-				p[i] = 'a'  - p[i] + 'z' -1;
-		}
-		else if ('A'<=p[i] && p[i]<='Z'){
-			p[i] = p[i] - n;
-		    if(p[i] < 'A')
-				p[i] = 'A' - p[i] + 'Z' - 1;
-		}
-	}
+        if ('a'<=p[i] && p[i]<= 'z')
+            p[i] = (p[i] + n > 'z' || p[i] + n < 'a')? 'a'  - p[i] + 'z' -1: p[i] + n;
+        else if ('A'<=p[i] && p[i]<='Z')
+            p[i] = (p[i] + n > 'Z' || p[i] + n < 'A')? 'A' - p[i] + 'Z' - 1: p[i] + n;
 
 
     printf("====================================\n");
