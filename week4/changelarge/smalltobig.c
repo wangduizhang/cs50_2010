@@ -161,9 +161,9 @@ int change_large(FILE *f,int n)
 
     int bitsofpixel = bmpinformation.bitspixel/8;
 
-    //Í·ÎÄ¼þÖÐÎÄ¼þ´óÐ¡
+  
     bmp.large += bmpinformation.sizeofimage * (n * n - 1);
-    //¿í¶È¸ß¶È
+
     bmpinformation.width *= n;
     bmpinformation.height *= n;
     bmpinformation.sizeofimage = bmpinformation.sizeofimage * n * n;

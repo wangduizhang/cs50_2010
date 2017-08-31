@@ -1,0 +1,62 @@
+//文件信息（前14字节
+
+
+424D（文件声明BM）
+F6000000（文件大小）
+0000（保留1）
+0000（保留2）
+36000000（图像数据偏移量）
+
+//图像参数信息（文件信息后40字节或56字节）
+
+//只有压缩方式选项被置为bit-fields(3)时，当前结构体的大小为56字节，否则为40字节
+
+
+28000000（图像结构体大小（40或56字节）） 
+08000000（图像宽度）
+F8FFFFFF（图像高度）
+0100（固定为1）
+1800（每个像素的位数（24位）bpp）
+00000000（压缩类型（0，1，2，3））
+C0000000 （位图大小（字节））
+120B0000（设备水平分辨率）
+120B0000（设备垂直分辨率（每米像素数））
+00000000（实际使用像素数，为0由位决定）
+00000000（图像中重要的色彩数目。为０，表示调色板内所有的颜色都是重要的）
+
+
+//调色板bpp小于8时才有
+
+//像素颜色数据
+FFFF  FF   FF  FFFF 
+0000  FF    00  00FF  
+0000  FF     00  00FF 
+FFFF  FF     FF  FFFF  
+FFFF  FF     00  00FF 
+FFFF  FF      FF  FFFF  
+FFFF FF      FF  FFFF 
+0000  FF     FF FFFF  
+0000 FF     FF  FFFF 
+0000  FF     FF FFFF  
+FFFF FF      00 00FF 
+FFFF  FF       00 00FF  
+0000 FF      FF  FFFF 
+FFFF  FF        FF FFFF  
+FFFF FF      FF  FFFF 
+FFFF  FF        00 00FF  
+0000 FF       FF  FFFF 
+0000  FF      FF FFFF  
+FFFF FF      00  00FF 
+FFFF  FF      00 00FF  
+0000 FF     FF  FFFF 
+FFFF  FF     00 00FF  
+0000 FF      FF  FFFF 
+FFFF  FF      00 00FF  
+FFFF FF     00  00FF 
+FFFF  FF     FF FFFF  
+FFFF FF     FF  FFFF 
+0000  FF      FF FFFF  
+FFFF FF     FF  FFFF 
+0000  FF     00 00FF  
+0000 FF      00  00FF 
+FFFF  FF     FF FFFF
