@@ -57,7 +57,6 @@ int begen(void)
         return 1;
     }
     else if (uc == 2){
-        printf("功能尚未开放！\n");
         return 2;
     }
     else{

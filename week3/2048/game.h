@@ -2,25 +2,23 @@
 #include <stdlib.h>
 #include <time.h>
 #include <termios.h>
+#include <ncurses.h>
+
+
 
 static int point;
 
+
 int scanKeyboard(void)//监听键盘 
 {  
-    int in;  
-    struct termios new_settings;  
-    struct termios stored_settings; 
-    tcgetattr(0,&stored_settings);  
-    new_settings = stored_settings;  
-    new_settings.c_lflag &= (~ICANON);  
-    new_settings.c_cc[VTIME] = 0;  
-    tcgetattr(0,&stored_settings);  
-    new_settings.c_cc[VMIN] = 1;  
-    tcsetattr(0,TCSANOW,&new_settings);  
-  
-    in = getchar();  
-    tcsetattr(0,TCSANOW,&stored_settings);  
-    return in;  
+    int key;
+    initscr();
+    raw();
+    keypad(stdscr,TRUE);
+    noecho();
+    key = getch();
+    return key;
+    endwin();
 }  
 
 
@@ -84,9 +82,7 @@ int print_chessboard5(int p[][5],int num,int point)//5.打印棋盘、分数
     printf("****************************************\n");
     printf("*             Q:退出并存档             *\n");
     printf("****************************************\n");
-    printf("*               W:上                   *\n");
-    printf("*                                      *\n");
-    printf("*          A:下  S:下  D:左            *\n");
+    printf("*              方向键控制              *\n");
     printf("****************************************\n");
     printf("当前分数：%d                            \n",point);
     printf("****************************************\n");
@@ -100,6 +96,7 @@ int print_chessboard5(int p[][5],int num,int point)//5.打印棋盘、分数
             }
         }
     return 0;
+
 }
 int initialize4(int p[][4],int num)//4.数组初始化
 {
@@ -116,9 +113,7 @@ int print_chessboard4(int p[][4],int num,int point)//4.打印棋盘、分数
     printf("****************************************\n");
     printf("*             Q:退出并存档             *\n");
     printf("****************************************\n");
-    printf("*               W:上                   *\n");
-    printf("*                                      *\n");
-    printf("*          A:下  S:下  D:左            *\n");
+    printf("*              方向键控制              *\n");
     printf("****************************************\n");
     printf("当前分数：%d                            \n",point);
     printf("****************************************\n");
@@ -276,34 +271,33 @@ int check_move5(int p[][5],int key)
 {
     switch(key)
     {
-        case 'W':
-        case 'w':
+        case 259:
             for (int i = 1; i < 5; ++i)
                 for (int j = 0; j < 5; ++j)
                     if ((p[i][j] != 0 && p[i-1][j] == 0)||(p[i][j]==p[i-1][j]&&p[i][j] !=0))
                         return 1;
             return 0;
-        case 'S':
-        case 's':
+        case 258:
             for (int i = 3; i >-1; --i)
                 for (int j = 0; j < 5; ++j)
                     if ((p[i][j] != 0 && p[i+1][j] == 0)||(p[i][j] == p[i+1][j]&&p[i][j] !=0))
                         return 1;
             return 0;
-        case 'D':
-        case 'd':    
+        case 261:   
             for (int i = 3; i >-1; --i)
                 for (int j = 0; j < 5; ++j)
                     if ((p[j][i] != 0 && p[j][i+1] == 0)||(p[j][i] == p[j][i+1] && p[i][j] !=0))
                         return 1;
             return 0;
-        case 'A':
-        case 'a':
+        case 260:
             for (int i = 1; i < 5; ++i)
                 for (int j = 0; j < 5; ++j)
                     if ((p[j][i] != 0 && p[j][i-1] == 0)||(p[j][i] == p[j][i-1]&&p[i][j] !=0))
                         return 1;
             return 0;
+            case 'q':
+            case 'Q':
+                return 1;
         default:
             return 0;
     }
@@ -315,7 +309,7 @@ int game_again5(int p[][5],int num)//5.游戏继续进行检测
     
     int check_move5(int p[][5],int key);
 
-    if (check_move5(p,'w')||check_move5(p,'a')||check_move5(p,'s')||check_move5(p,'d'))
+    if (check_move5(p,259)||check_move5(p,260)||check_move5(p,258)||check_move5(p,261))
         return 1;
     return 0;
 }
@@ -329,20 +323,16 @@ int move_num5(int key,int p[][5])//根据用户操作，移动数块
 
     switch(key)
     { 
-        case 'W':
-        case 'w':
+        case 259:
             move_num_u5(p);
             break;
-        case 'S':
-        case 's':
+        case 258:
             move_num_d5(p);
             break;
-        case 'D':
-        case 'd':    
+        case 261: 
             move_num_r5(p);
             break;
-        case 'A':
-        case 'a':
+        case 260:
             move_num_l5(p);
             break;
     }
@@ -489,34 +479,34 @@ int check_move4(int p[][4],int key)
 {
     switch(key)
     {
-        case 'W':
-        case 'w':
+        case 259:
             for (int i = 1; i < 4; ++i)
                 for (int j = 0; j < 4; ++j)
                     if ((p[i][j] != 0 && p[i-1][j] == 0)||(p[i][j]==p[i-1][j]&&p[i][j] !=0))
                         return 1;
             return 0;
-        case 'S':
-        case 's':
+        case 258:
             for (int i = 2; i >-1; --i)
                 for (int j = 0; j < 4; ++j)
                     if ((p[i][j] != 0 && p[i+1][j] == 0)||(p[i][j] == p[i+1][j]&&p[i][j] !=0))
                         return 1;
             return 0;
-        case 'D':
-        case 'd':    
+        case 261:    
             for (int i = 2; i >-1; --i)
                 for (int j = 0; j < 4; ++j)
                     if ((p[j][i] != 0 && p[j][i+1] == 0)||(p[j][i] == p[j][i+1] && p[i][j] !=0))
                         return 1;
             return 0;
-        case 'A':
-        case 'a':
+        case 260:
             for (int i = 1; i < 4; ++i)
                 for (int j = 0; j < 4; ++j)
                     if ((p[j][i] != 0 && p[j][i-1] == 0)||(p[j][i] == p[j][i-1]&&p[i][j] !=0))
                         return 1;
             return 0;
+        case 'Q':
+        case 'q':
+            return 1;
+
         default:
             return 0;
     }
@@ -527,7 +517,7 @@ int game_again4(int p[][4],int num)//4.游戏继续进行检测
     
     int check_move4(int p[][4],int key);
 
-    if (check_move4(p,'w')||check_move4(p,'a')||check_move4(p,'s')||check_move4(p,'d'))
+    if (check_move4(p,259)||check_move4(p,260)||check_move4(p,258)||check_move4(p,261))
         return 1;
     return 0;
 }
@@ -542,20 +532,16 @@ int move_num4(int key,int p[][4])//根据用户操作，移动数块
 
     switch(key)
     { 
-        case 'W':
-        case 'w':
+        case 259:
             move_num_u4(p);
             break;
-        case 'S':
-        case 's':
+        case 258:
             move_num_d4(p);
             break;
-        case 'D':
-        case 'd':    
+        case 261: 
             move_num_r4(p);
             break;
-        case 'A':
-        case 'a':
+        case 260:
             move_num_l4(p);
             break;
     }
@@ -563,6 +549,96 @@ int move_num4(int key,int p[][4])//根据用户操作，移动数块
 }
 
 
+int save_game4(FILE *f,int p[][4])
+{  
+    char ch;
+
+    while(point)
+    {
+        ch = (char)(point % 10 + 48);
+        fputc(ch,f);
+        point /= 10;
+    }
+    fputc('\n',f);
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j< 4; ++j){
+            if (p[i][j] == 0)
+                fputc('0',f);
+            while(p[i][j])
+            {
+                ch = (char)(p[i][j] % 10 + 48);
+                fputc(ch,f);
+                p[i][j] /= 10;
+            }
+            fputc('\n',f);
+        }
+    
+
+    return 0;
+}
+
+
+
+int save_game5(FILE *f,int p[][5])
+{
+    char ch;
+
+    while(point)
+    {
+        ch = (char)(point % 10 + 48);
+        fputc(ch,f);
+        point /= 10;
+    }
+    fputc('\n',f);
+    for (int i = 0; i < 5; ++i)
+        for (int j = 0; j< 5; ++j){
+            if (p[i][j] == 0)
+                fputc('0',f);
+            while(p[i][j])
+            {
+                ch = (char)(p[i][j] % 10 + 48);
+                fputc(ch,f);
+                p[i][j] /= 10;
+            }
+            fputc('\n',f);
+        }
+    return 0;
+}
+
+int cifang(int x)
+{
+   int n = 1;
+   
+   if (x == 0)
+       return n;
+
+   for (int i = 0; i < x; ++i)
+       n *= 10;
+   return n;
+}
+
+int open_save_number(FILE *f)
+{
+    int cifang(int n);
+
+    char str[10];
+    char word;
+    int index = 0;
+    int p = 0;
+
+    while(1){
+        word = fgetc(f);
+        if (word == '\n')
+            break;
+        str[index] = word;
+        index++;
+
+    }
+
+    for (int i = 0; i < index; ++i)
+        p += (int)(str[i] - 48) * cifang(i);
+    return p;
+}
 
 int begame(int uc)//游戏模块
 {
@@ -578,12 +654,103 @@ int begame(int uc)//游戏模块
     int check_move4(int p[][4],int key);
     int move_num5(int key,int p[][5]);
     int move_num4(int key,int p[][4]);
+    int save_game4(FILE *f,int p[][4]);
+    int save_game5(FILE *f,int p[][5]);
+    int open_save_number(FILE *f);
+
 
     int key;
 
     if (uc == 0)//继续游戏，从文件载入数据
-    	;
-	
+    {   
+        FILE *text;
+        text = fopen("save.txt","r");
+        
+        int chessboard[4][4];
+
+        uc = open_save_number(text);
+        point = open_save_number(text);
+        switch(uc)
+        {
+            case 4:
+                for (int i = 0; i < 4; ++i)
+                    for (int j = 0; j < 4; ++j)
+                        chessboard[i][j] = open_save_number(text);
+            while(1)
+            {
+            print_chessboard4(chessboard,uc,point);
+            if (!game_again4(chessboard,uc))
+            {
+                printf("游戏结束！！\n");
+                return 0;//游戏结束
+            }
+            while(1){
+                key = scanKeyboard();
+                if (check_move4(chessboard,key))//判断键盘
+                {if (key == 'Q'||key == 'q')//退出存档
+                    {
+                        FILE *text;
+                        text = fopen("save.txt","w");
+                        fputs("4\n",text);
+                        save_game4(text,chessboard);
+                        fclose(text);
+                        printf("游戏以存档\n");
+
+                        return 0;}
+                    move_num4(key,chessboard);
+                    break;
+                }
+                    }
+            num_initialize4(chessboard,uc);        
+            }
+                break;
+            
+
+
+            case 5:
+                for (int i = 0; i < 5; ++i)
+                    for (int j = 0; j < 5; ++j)
+                        chessboard[i][j] = open_save_number(text);
+            while(1)
+            {
+            print_chessboard4(chessboard,uc,point);
+            if (!game_again4(chessboard,uc))
+            {
+                printf("游戏结束！！\n");
+
+                return 0;//游戏结束
+            }
+            while(1){
+                key = scanKeyboard();
+                if (check_move4(chessboard,key))//判断键盘
+                {if (key == 'Q'||key == 'q')//退出存档
+                    {
+                        FILE *text;
+                        text = fopen("save.txt","w");
+                        fputs("5\n",text);
+                        save_game4(text,chessboard);
+                        fclose(text);
+                        printf("游戏以存档\n");
+
+                        return 0;
+                    }
+                    move_num4(key,chessboard);
+                    break;
+                }
+                    }
+            num_initialize4(chessboard,uc);        
+            }
+                break;
+            default:
+                return 0;
+        }
+        fclose(text);
+        return 0;
+	}
+    
+
+
+
     //5*5
 	else if (uc == 5){
 	    int chessboard[5][5];//新游戏
@@ -604,7 +771,16 @@ int begame(int uc)//游戏模块
                 if (check_move5(chessboard,key))//判断键盘
                 {
                     if (key == 'Q'||key == 'q')//退出存档
-                        return 0;
+                    {
+                    FILE *text;
+                    text = fopen("save.txt","w");
+                    fputs("5\n",text);
+                    save_game5(text,chessboard);
+                    fclose(text);
+                    printf("游戏已存档\n");
+
+                    return 0;
+                    }
                     move_num5(key,chessboard);
                     break;
                 }
@@ -633,7 +809,15 @@ int begame(int uc)//游戏模块
                 if (check_move4(chessboard,key))//判断键盘
                 {
                     if (key == 'Q'||key == 'q')//退出存档
+                    {
+                        FILE *text;
+                        text = fopen("save.txt","w");
+                        fputs("4\n",text);
+                        save_game4(text,chessboard);
+                        fclose(text);
+                        printf("游戏以存档\n");
                         return 0;
+                    }
                     move_num4(key,chessboard);
                     break;
                 }

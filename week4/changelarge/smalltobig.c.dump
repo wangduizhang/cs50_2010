@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+static int *olddata;
+
+struct bmpfileheader
+{
+	short int assert;//拢篓脦脛录镁脡霉脙梅BM拢漏
+	int large;//脦脛录镁麓贸脨隆
+	short int reserved1;//卤拢脕么1
+	short int reserved2;//卤拢脕么2
+	int imageoffset;//脥录脧帽脢媒戮脻脝芦脪脝脕驴
+};
+
+struct bmpfileinformation
+{
+  int sizeofinformation;//脨脜脧垄麓贸脨隆
+  int width;//驴铆
+  int height;//赂脽
+  short int other1;
+  short int bitspixel;//脧帽脣脴碌脛脦禄
+  int other2;
+  int sizeofimage;//脦禄脥录麓贸脨隆
+  int other3;
+  int other4;
+  int other5;
+  int other6;
+};
+
+struct bmpfileheader bmp;
+struct bmpfileinformation bmpinformation;
+
+
+
+int get_file(char bmp_name[100])
+{
+    char ccc;
+    int index = 0;
+
+	while((ccc = fgetc(stdin)) != '\n'){
+    bmp_name[index] = ccc;
+    index++;
+    if (index == 100)
+        break;
+    }
+
+    bmp_name[index+1] = '\0';
+    return 0;
+}
+
+//录矛虏芒脦脛录镁脙没
+int check_file_name(const char *n)
+{
+	int index = 0;
+
+	while(index < sizeof(n) - 3){
+		if (n[index] == '.')
+			if (n[index+1] == 'b'&& n[index+2] == 'm' && n[index+3] == 'p')
+				return 0;
+		index++;
+	}
+	return 1;
+}
+
+//禄帽脠隆脦脛录镁脢媒戮脻
+int get_data(FILE *f)
+{   
+    //脥路脦脛录镁
+    short int *p1 = & bmp.assert;
+   	int *p2 = &bmp.large;
+	  short int *p3 = &bmp.reserved1;
+	  short int *p4 = &bmp.reserved2;
+	  int *p5 = &bmp.imageoffset;
+    //脥路脦脛录镁
+    fread(p1,sizeof(*p1),1,f);
+    fread(p2,sizeof(*p2),1,f);
+    fread(p3,sizeof(*p3),1,f);
+    fread(p4,sizeof(*p4),1,f);
+    fread(p5,sizeof(*p5),1,f);
+
+    //脦脛录镁脨脜脧垄
+    int *p6 = &bmpinformation.sizeofinformation;//脨脜脧垄麓贸脨隆
+    int *p7 = &bmpinformation.width;//驴铆
+    int *p8 = &bmpinformation.height;//赂脽
+    short int *p9 = &bmpinformation.other1;
+    short int *p10 = &bmpinformation.bitspixel;//脧帽脣脴碌脛脦禄
+    int *p11 = &bmpinformation.other2;
+    int *p12 = &bmpinformation.sizeofimage;//脦禄脥录麓贸脨隆(脳脰陆脷)
+    int *p13 = &bmpinformation.other3;
+    int *p14 = &bmpinformation.other4;
+    int *p15 = &bmpinformation.other5;
+    int *p16 = &bmpinformation.other6;
+    //脦脛录镁脨脜脧垄
+    fread(p6,sizeof(*p6),1,f);
+    fread(p7,sizeof(*p7),1,f);
+    fread(p8,sizeof(*p8),1,f);
+    fread(p9,sizeof(*p9),1,f);
+    fread(p10,sizeof(*p10),1,f);
+    fread(p11,sizeof(*p11),1,f);
+    fread(p12,sizeof(*p12),1,f);
+    fread(p13,sizeof(*p13),1,f);
+    fread(p14,sizeof(*p14),1,f);
+    fread(p15,sizeof(*p15),1,f);
+    fread(p16,sizeof(*p16),1,f);
+    //脥录脧帽脢媒戮脻
+    int sizeofdata = bmpinformation.sizeofimage;
+    
+    olddata = (int *)malloc(sizeofdata +1);
+
+    //脥录脧帽脢媒戮脻
+    //int sizeofpixel = bmpinformation.bitspixel/8;
+    fread(olddata,sizeof(int),sizeofdata/4,f);
+
+    free(olddata);
+    return 0;
+}
+
+
+//赂脛卤盲脦禄脥录鲁脽麓莽
+int change_large(int *p)
+{
+    
+
+
+    return 0;
+}
+//脢媒戮脻麓忙麓垄拢卢脦脛录镁脡煤鲁脡
+int make_file()
+{
+    return 0;
+}
+
+int main(int argc, char const *argv[])
+{
+	int get_file(char bmp_name[100]);
+    int check_file_name(const char *n);
+ 
+	FILE *f;
+
+    if (!(f = fopen(argv[1],"rb")) || check_file_name(argv[1])){
+    	  printf("ERROR:invalid file name!\n");
+        return 0;
+        }
+
+
+    get_data(f);
+
+}
