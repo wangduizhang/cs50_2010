@@ -27,6 +27,32 @@ struct addressid
 
 } studentaddress[3467];
 
+int day_cmp(char *p1,char *p2)
+{
+    for (int i = 6; i < 14; ++i)
+        if (p1[i] != p2[i])
+            return 0;
+    return 1;
+}
+
+//相同生日（同年同月同日）
+int same_day(char *name1,char *p1,struct student *students)
+{
+    int num = 0;
+
+    for (int i = 1; i <= NUMBEROFSTUDENT; ++i)
+        if (day_cmp(p1,students[i].idcard)){
+            if (strcmp(name1, students[i].name) == 0)
+                continue;
+            printf(">>>姓名：%s     ", students[i].name );
+            printf("   学号：%s\n", students[i].studyid );
+            printf("   系：%s       ", students[i].xi );
+            printf("   专业：%s\n", students[i].zhuanye );
+            printf("   身份证号:%s\n",students[i].idcard);
+            num++;
+        }
+    return num;
+}
 
 int main()
 {
@@ -64,15 +90,13 @@ int main()
     printf("         学生信息查询系统        \n");
     printf("===============================\n");
     printf("输入你要查询的学生姓名\n");
-    printf(">>>\n");
+    printf(">>>");
     
     scanf("%50s",selfname);
-
-    
+    getchar();
     for (int i = 1; i <= NUMBEROFSTUDENT; ++i){                                                                                                                                       
         if (strcmp(students[i].name, selfname) == 0){
             number++;
-            printf("= = = = = = = = = = = = = = = = = = =\n");
             printf("姓名：%s     ", students[i].name );
             printf("学号：%s\n", students[i].studyid );
             printf("系：%s       ", students[i].xi );
@@ -80,11 +104,17 @@ int main()
             for (int j = 1; j <=3465 ; ++j)
                 if (strncmp(students[i].idcard,studentaddress[j].id,6)==0)
                     printf("家庭住址：%s\n", studentaddress[j].address);
-
+            printf("身份证号:%s\n",students[i].idcard);
+            printf("===============同年同月同日生===============\n");
+            int num = same_day(students[i].name,students[i].idcard,students);
+            printf("=================(共%d人)==================\n",num);           
+            printf("=================回车继续==================\n");
+            getchar();
         }
     }
     if (number == 0)
        printf("没有这个人\n"); 
+
 
 
 
